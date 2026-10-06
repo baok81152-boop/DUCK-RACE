@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Đua Vịt Random</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 90%;
+            height: 80px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .controls {
+            margin: 15px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #008cba;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #005f73;
+        }
+
+        /* ĐƯỜNG ĐUA */
+        .track-container {
+            position: relative;
+            background: linear-gradient(to bottom, #1e90ff, #00bfff);
+            border-radius: 8px;
+            padding: 10px 0;
+            overflow: hidden;
+            border: 3px solid #005f73;
+        }
+
+        .finish-line {
+            position: absolute;
+            right: 30px;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: repeating-linear-gradient(
+                0deg,
+                #000,
+                #000 10px,
+                #fff 10px,
+                #fff 20px
+            );
+            z-index: 1;
+        }
+
+        /* CON VỊT */
+        .duck-lane {
+            position: relative;
+            height: 40px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+        }
+
+        .duck {
+            position: absolute;
+            left: 5px;
+            transition: left 0.1s linear;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .duck-icon {
+            font-size: 24px;
+        }
+
+        .duck-name {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🦆 ĐƯỜNG ĐUA VỊT 🦆</h2>
+    <p>Nhập danh sách tên (mỗi tên một dòng):</p>
+    <textarea id="namesInput">Dũng
+Hà
+Bình
+Chi
+Phước
+Đức</textarea>
+
+    <div class="controls">
+        <button onclick="startRace()">🚀 Bắt đầu đua!</button>
+    </div>
+
+    <div class="track-container" id="track">
+        <div class="finish-line"></div>
+        <!-- Các con vịt sẽ tự động tạo ở đây -->
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    let raceInterval = null;
+
+    function startRace() {
+        const track = document.getElementById('track');
+        const resultDiv = document.getElementById('result');
+        const input = document.getElementById('namesInput').value.trim();
+        
+        // Lấy danh sách tên
+        const names = input.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+
+        if (names.length === 0) {
+            alert('Vui lòng nhập ít nhất 1 tên!');
+            return;
+        }
+
+        // Xóa đường đua cũ
+        track.querySelectorAll('.duck-lane').forEach(lane => lane.remove());
+        resultDiv.innerText = '';
+        if (raceInterval) clearInterval(raceInterval);
+
+        // Tạo vịt mới cho mỗi tên
+        const ducks = [];
+        names.forEach((name, index) => {
+            const lane = document.createElement('div');
+            lane.className = 'duck-lane';
+
+            const duck = document.createElement('div');
+            duck.className = 'duck';
+            duck.style.left = '5px';
+            duck.innerHTML = `<span class="duck-icon">🦆</span><span class="duck-name">${name}</span>`;
+
+            lane.appendChild(duck);
+            track.appendChild(lane);
+
+            ducks.push({
+                element: duck,
+                name: name,
+                pos: 5
+            });
+        });
+
+        // Độ dài đường đua (trừ vạch đích)
+        const finishPos = track.clientWidth - 80;
+
+        // Bắt đầu chạy đua
+        raceInterval = setInterval(() => {
+            let winner = null;
+
+            ducks.forEach(duck => {
+                // Mỗi bước di chuyển ngẫu nhiên từ 2px đến 10px
+                const speed = Math.random() * 8 + 2;
+                duck.pos += speed;
+                duck.element.style.left = duck.pos + 'px';
+
+                // Kiểm tra xem ai chạm vạch đích trước
+                if (duck.pos >= finishPos && !winner) {
+                    winner = duck.name;
+                }
+            });
+
+            // Nếu đã tìm ra người thắng
+            if (winner) {
+                clearInterval(raceInterval);
+                resultDiv.innerHTML = `🎉 Chúc mừng 🏆 <strong>${winner}</strong> 🏆 đã về đích đầu tiên!`;
+            }
+        }, 100);
+    }
+</script>
+
+</body>
+</html>
