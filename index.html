@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Đua Vịt Random 🐥</title>
+    <title>ĐUA VỊT - GAME DUCK RACE ONLINE</title>
     <!-- Thư viện pháo hoa chúc mừng -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -15,12 +15,12 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            background: #f0fdf4;
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 10px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .container {
@@ -29,15 +29,42 @@
             background: #ffffff;
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
-        h1 {
+        /* TIÊU ĐỀ CHỮ NHẢY NHẢY 3D */
+        .bouncy-title {
             text-align: center;
-            color: #0369a1;
-            margin-bottom: 15px;
-            font-size: 28px;
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
+        .bouncy-title span {
+            display: inline-block;
+            animation: bounceLetter 1s infinite alternate ease-in-out;
+            color: #f59e0b;
+            text-shadow: 2px 2px 0px #d97706, 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Gán độ trễ nhảy cho từng chữ cái */
+        .bouncy-title span:nth-child(1) { animation-delay: 0.0s; color: #ef4444; }
+        .bouncy-title span:nth-child(2) { animation-delay: 0.1s; color: #f97316; }
+        .bouncy-title span:nth-child(3) { animation-delay: 0.2s; color: #eab308; }
+        .bouncy-title span:nth-child(4) { animation-delay: 0.3s; color: #84cc16; }
+        .bouncy-title span:nth-child(5) { animation-delay: 0.4s; color: #06b6d4; }
+        .bouncy-title span:nth-child(6) { animation-delay: 0.5s; color: #3b82f6; }
+        .bouncy-title span:nth-child(7) { animation-delay: 0.6s; color: #8b5cf6; }
+        .bouncy-title span:nth-child(8) { animation-delay: 0.7s; color: #ec4899; }
+
+        @keyframes bounceLetter {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
         }
 
         .input-section {
@@ -59,7 +86,6 @@
             border: 2px solid #cbd5e1;
             font-size: 15px;
             outline: none;
-            transition: border-color 0.2s;
             resize: vertical;
         }
 
@@ -67,11 +93,11 @@
             border-color: #0284c7;
         }
 
-        /* KHU VỰC ĐIỀU CHỈNH THỜI GIAN VÀ NÚT BẤM */
+        /* THANH ĐIỀU KHIỂN & THỜI GIAN */
         .settings-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
@@ -90,8 +116,8 @@
         }
 
         .time-setting input {
-            width: 70px;
-            padding: 8px;
+            width: 65px;
+            padding: 6px;
             border-radius: 8px;
             border: 2px solid #cbd5e1;
             font-size: 15px;
@@ -105,7 +131,7 @@
         }
 
         button {
-            padding: 10px 20px;
+            padding: 10px 18px;
             font-size: 15px;
             font-weight: bold;
             color: white;
@@ -113,35 +139,23 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        .btn-start {
-            background-color: #0284c7;
-        }
+        .btn-start { background-color: #10b981; }
+        .btn-start:hover { background-color: #059669; }
 
-        .btn-start:hover {
-            background-color: #0369a1;
-            transform: translateY(-2px);
-        }
+        .btn-reset { background-color: #64748b; }
+        .btn-reset:hover { background-color: #475569; }
 
-        .btn-reset {
-            background-color: #64748b;
-        }
-
-        .btn-reset:hover {
-            background-color: #475569;
-            transform: translateY(-2px);
-        }
-
-        /* KHU VỰC ĐƯỜNG ĐUA */
+        /* ĐƯỜNG ĐUA */
         .track-container {
             position: relative;
             background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
             border-radius: 12px;
-            padding: 15px 0;
+            padding: 10px 0;
             overflow: hidden;
-            border: 4px solid #0369a1;
+            border: 4px solid #0284c7;
             min-height: 150px;
         }
 
@@ -159,7 +173,6 @@
                 #fff 24px
             );
             z-index: 1;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
         }
 
         .duck-lane {
@@ -170,9 +183,7 @@
             align-items: center;
         }
 
-        .duck-lane:last-child {
-            border-bottom: none;
-        }
+        .duck-lane:last-child { border-bottom: none; }
 
         .duck {
             position: absolute;
@@ -186,22 +197,16 @@
 
         .duck-icon {
             font-size: 30px;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
             display: inline-block;
         }
 
-        /* HIỆU ỨNG NHÚN NHÚN KHI CHUẨN BỊ ĐUA */
         .duck.bouncing .duck-icon {
             animation: duckBounce 0.4s infinite alternate ease-in-out;
         }
 
         @keyframes duckBounce {
-            0% {
-                transform: translateY(0) scale(1, 1);
-            }
-            100% {
-                transform: translateY(-8px) scale(0.95, 1.05);
-            }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
         }
 
         .duck-name {
@@ -212,16 +217,12 @@
             font-weight: 700;
             color: #1e293b;
             white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* MÀN HÌNH ĐẾM NGƯỢC 3..2..1 */
+        /* ĐẾM NGƯỢC */
         .countdown-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 12px;
             display: flex;
@@ -233,32 +234,84 @@
             transition: opacity 0.3s;
         }
 
-        .countdown-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .countdown-overlay.active { opacity: 1; pointer-events: auto; }
 
         .countdown-number {
             font-size: 80px;
             font-weight: 900;
             color: #fde047;
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            animation: pop 0.8s ease-in-out infinite;
         }
 
-        @keyframes pop {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); }
+        /* BẢNG XẾP HẠNG (BXH) */
+        .leaderboard-section {
+            margin-top: 25px;
+            background: #ffffff;
+            border: 2px solid #f1f5f9;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: none; /* Ẩn đi khi chưa đua xong */
         }
 
-        /* POPUP CHÚC MỪNG CHIẾN THẮNG */
+        .leaderboard-section.show { display: block; }
+
+        .leaderboard-header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th {
+            background: #f8fafc;
+            padding: 10px;
+            color: #64748b;
+            font-size: 14px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .leaderboard-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .leaderboard-table tr:nth-child(1) { background: #fefce8; } /* Hạng 1 Vàng */
+        .leaderboard-table tr:nth-child(2) { background: #f8fafc; } /* Hạng 2 Bạc */
+        .leaderboard-table tr:nth-child(3) { background: #fff7ed; } /* Hạng 3 Đồng */
+
+        .rank-badge {
+            font-size: 18px;
+            font-weight: 800;
+            width: 30px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .time-badge {
+            color: #2563eb;
+            font-family: monospace;
+            font-size: 15px;
+        }
+
+        /* POPUP WINNER */
         .winner-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
@@ -269,58 +322,39 @@
             transition: opacity 0.3s ease;
         }
 
-        .winner-modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .winner-modal.show { opacity: 1; pointer-events: auto; }
 
         .winner-card {
             background: white;
             padding: 30px 40px;
             border-radius: 20px;
             text-align: center;
-            transform: scale(0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.8);
+            transition: transform 0.3s;
             box-shadow: 0 20px 30px rgba(0,0,0,0.3);
         }
 
-        .winner-modal.show .winner-card {
-            transform: scale(1);
-        }
+        .winner-modal.show .winner-card { transform: scale(1); }
 
-        .winner-card h2 {
-            font-size: 28px;
-            color: #0284c7;
-            margin-bottom: 10px;
-        }
+        .winner-card h2 { font-size: 26px; color: #0284c7; }
+        .winner-card .trophy { font-size: 60px; margin: 10px 0; }
+        .winner-card .winner-name { font-size: 32px; font-weight: bold; color: #eab308; margin-bottom: 20px; }
 
-        .winner-card .trophy {
-            font-size: 60px;
-            margin: 10px 0;
-        }
-
-        .winner-card .winner-name {
-            font-size: 32px;
-            font-weight: bold;
-            color: #eab308;
-            margin-bottom: 20px;
-        }
-
-        .btn-close {
-            background-color: #22c55e;
-            padding: 10px 25px;
-            font-size: 16px;
-        }
-
-        .btn-close:hover {
-            background-color: #16a34a;
-        }
+        .btn-close { background-color: #22c55e; padding: 10px 25px; }
+        .btn-close:hover { background-color: #16a34a; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🐥 ĐƯỜNG ĐUA VỊT VÀNG RANDOM 🐥</h1>
+    <!-- TIÊU ĐỀ CHỮ NHẢY NHẢY -->
+    <div class="bouncy-title">
+        <span>Đ</span><span>U</span><span>A</span>
+        <span>&nbsp;</span>
+        <span>V</span><span>Ị</span><span>T</span>
+        <span>&nbsp;</span>
+        <span>🐥</span>
+    </div>
 
     <div class="input-section">
         <label for="namesInput">Nhập danh sách người tham gia (mỗi tên trên 1 dòng):</label>
@@ -334,39 +368,60 @@ Phước
 
     <div class="settings-bar">
         <div class="time-setting">
-            <span>⏱️ Thời gian đua:</span>
+            <span>⏱️ Thời gian (giây):</span>
             <input type="number" id="raceTimeInput" value="10" min="3" max="300">
-            <span>giây</span>
         </div>
         <div class="controls">
-            <button class="btn-start" onclick="startCountdown()">🚀 Bắt đầu đua!</button>
-            <button class="btn-reset" onclick="resetRace()">🔄 Đặt lại</button>
+            <button class="btn-start" onclick="startCountdown()">🚀 Bắt đầu cuộc đua!</button>
+            <button class="btn-reset" onclick="resetRace()">🔄 Chơi lại</button>
         </div>
     </div>
 
+    <!-- ĐƯỜNG ĐUA -->
     <div class="track-container" id="track">
         <div class="finish-line"></div>
         <div class="countdown-overlay" id="countdownOverlay">
             <div class="countdown-number" id="countdownText">3</div>
         </div>
     </div>
+
+    <!-- BẢNG XẾP HẠNG -->
+    <div class="leaderboard-section" id="leaderboardSection">
+        <div class="leaderboard-header">
+            🏆 🏁 BXH Đường Đua Vịt
+        </div>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Hạng</th>
+                    <th style="width: 55%;">Tên Vịt</th>
+                    <th style="width: 30%;">Thời gian</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Nội dung bxh được chèn tự động -->
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- POPUP HIỂN THỊ NGƯỜI THẮNG CUỘC -->
+<!-- POPUP CHIẾN THẮNG -->
 <div class="winner-modal" id="winnerModal">
     <div class="winner-card">
         <h2>🎉 CHÚC MỪNG WINNER 🎉</h2>
         <div class="trophy">🏆</div>
         <div class="winner-name" id="winnerName">Tên Người Thắng</div>
-        <button class="btn-close" onclick="closeModal()">Đóng & Đua Tiếp</button>
+        <button class="btn-close" onclick="closeModal()">Đóng & Xem BXH</button>
     </div>
 </div>
 
 <script>
     let raceInterval = null;
     let isRacing = false;
+    let startTime = 0;
+    let finishList = [];
 
-    // Bắn pháo hoa chúc mừng
+    // Bắn pháo hoa
     function triggerConfetti() {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -384,15 +439,15 @@ Phước
         }, 250);
     }
 
-    // Đặt lại đường đua
     function resetRace() {
         if (raceInterval) clearInterval(raceInterval);
         isRacing = false;
+        finishList = [];
         const track = document.getElementById('track');
         track.querySelectorAll('.duck-lane').forEach(lane => lane.remove());
+        document.getElementById('leaderboardSection').classList.remove('show');
     }
 
-    // Hiệu ứng đếm ngược 3... 2... 1...
     function startCountdown() {
         if (isRacing) return;
 
@@ -406,14 +461,13 @@ Phước
 
         resetRace();
 
-        // Tạo vịt trên làn đua (Vịt vàng 🐥)
         const track = document.getElementById('track');
         names.forEach(name => {
             const lane = document.createElement('div');
             lane.className = 'duck-lane';
 
             const duck = document.createElement('div');
-            duck.className = 'duck bouncing'; // Bật hiệu ứng nhún nhún
+            duck.className = 'duck bouncing';
             duck.style.left = '10px';
             duck.innerHTML = `<span class="duck-icon">🐥</span><span class="duck-name">${name}</span>`;
 
@@ -421,7 +475,6 @@ Phước
             track.appendChild(lane);
         });
 
-        // Bắt đầu đếm ngược
         const overlay = document.getElementById('countdownOverlay');
         const countdownText = document.getElementById('countdownText');
         overlay.classList.add('active');
@@ -438,60 +491,73 @@ Phước
             } else {
                 clearInterval(countTimer);
                 overlay.classList.remove('active');
-
-                // Tắt nhún nhún khi bắt đầu đua
                 document.querySelectorAll('.duck').forEach(d => d.classList.remove('bouncing'));
-
                 runRace(names);
             }
         }, 800);
     }
 
-    // Tiến hành đua
     function runRace(names) {
         isRacing = true;
+        finishList = [];
+        startTime = Date.now();
+
         const track = document.getElementById('track');
         const duckElements = track.querySelectorAll('.duck');
         const finishPos = track.clientWidth - 90;
 
-        // Lấy thời gian đua do người dùng nhập (mặc định 10s nếu để trống/nhập sai)
         let totalSeconds = parseFloat(document.getElementById('raceTimeInput').value) || 10;
         if (totalSeconds < 3) totalSeconds = 3;
 
-        // Tính tốc độ trung bình dựa trên thời gian đua đã chọn
-        const intervalMs = 30; // Cập nhật mỗi 30ms
+        const intervalMs = 30;
         const totalSteps = (totalSeconds * 1000) / intervalMs;
         const baseSpeed = (finishPos - 10) / totalSteps;
 
         const ducks = Array.from(duckElements).map((el, index) => ({
             element: el,
             name: names[index],
-            pos: 10
+            pos: 10,
+            finished: false
         }));
 
         raceInterval = setInterval(() => {
-            let winner = null;
+            let allFinished = true;
 
             ducks.forEach(duck => {
-                // Tốc độ biến thiên ngẫu nhiên xung quanh tốc độ trung bình
-                const speed = baseSpeed * (Math.random() * 1.6 + 0.2);
-                duck.pos += speed;
-                duck.element.style.left = duck.pos + 'px';
+                if (!duck.finished) {
+                    allFinished = false;
+                    const speed = baseSpeed * (Math.random() * 1.6 + 0.2);
+                    duck.pos += speed;
 
-                if (duck.pos >= finishPos && !winner) {
-                    winner = duck.name;
+                    if (duck.pos >= finishPos) {
+                        duck.pos = finishPos;
+                        duck.finished = true;
+
+                        // Tinh thoi gian can dich
+                        const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
+                        finishList.push({
+                            name: duck.name,
+                            time: timeTaken
+                        });
+
+                        // Neu la con vit dau tien ve dich
+                        if (finishList.length === 1) {
+                            showWinner(duck.name);
+                        }
+                    }
+                    duck.element.style.left = duck.pos + 'px';
                 }
             });
 
-            if (winner) {
+            // Khi tat ca vit da ve dich
+            if (allFinished || finishList.length === ducks.length) {
                 clearInterval(raceInterval);
                 isRacing = false;
-                showWinner(winner);
+                renderLeaderboard();
             }
         }, intervalMs);
     }
 
-    // Hiển thị kết quả người thắng
     function showWinner(name) {
         document.getElementById('winnerName').innerText = name;
         document.getElementById('winnerModal').classList.add('show');
@@ -500,6 +566,30 @@ Phước
 
     function closeModal() {
         document.getElementById('winnerModal').classList.remove('show');
+    }
+
+    // VE BANG XEP HANG (BXH)
+    function renderLeaderboard() {
+        const tbody = document.getElementById('leaderboardBody');
+        tbody.innerHTML = '';
+
+        const medalIcons = ['🥇', '🥈', '🥉'];
+
+        finishList.forEach((item, index) => {
+            const tr = document.createElement('tr');
+
+            const rankBadge = index < 3 ? medalIcons[index] : (index + 1);
+
+            tr.innerHTML = `
+                <td><span class="rank-badge">${rankBadge}</span></td>
+                <td>🐥 ${item.name}</td>
+                <td><span class="time-badge">${item.time}s</span></td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('leaderboardSection').classList.add('show');
     }
 </script>
 
