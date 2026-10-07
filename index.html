@@ -173,7 +173,6 @@
             z-index: 1;
         }
 
-        /* TĂNG KÍCH THƯỚC LÀN ĐUA ĐỂ CHỨA VỊT FLAPPY TO */
         .duck-lane {
             position: relative;
             height: 65px;
@@ -194,15 +193,13 @@
             z-index: 2;
         }
 
-        /* PHÓNG TO SVG FLAPPY BIRD */
         .flappy-bird-svg {
-            width: 52px;  /* Tăng từ 36px lên 52px */
-            height: 40px; /* Tăng từ 28px lên 40px */
+            width: 52px;
+            height: 40px;
             display: inline-block;
             filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
         }
 
-        /* HIỆU ỨNG VỖ CÁNH NHANH */
         .duck.flapping .wing {
             animation: flapWing 0.12s infinite alternate ease-in-out;
             transform-origin: 12px 14px;
@@ -213,7 +210,6 @@
             100% { transform: rotate(-40deg) translateY(-3px); }
         }
 
-        /* HIỆU ỨNG DI CHUYỂN DẬP DỀNH (LƯỢN SÓNG) KHI BẮT ĐẦU ĐUA */
         .duck.flapping .flappy-bird-svg {
             animation: waveMotion 0.4s infinite alternate ease-in-out;
         }
@@ -223,7 +219,6 @@
             100% { transform: translateY(4px) rotate(3deg); }
         }
 
-        /* HIỆU ỨNG NHÚN NHÚN CHUẨN BỊ */
         .duck.bouncing .flappy-bird-svg {
             animation: birdBounce 0.35s infinite alternate ease-in-out;
         }
@@ -244,7 +239,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* ĐẾM NGƯỢC */
         .countdown-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -268,7 +262,6 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* BẢNG XẾP HẠNG (BXH) */
         .leaderboard-section {
             margin-top: 25px;
             background: #ffffff;
@@ -333,7 +326,6 @@
             font-size: 15px;
         }
 
-        /* POPUP WINNER */
         .winner-modal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -371,8 +363,13 @@
 </head>
 <body>
 
+<!-- KHAI BÁO CÁC FILE ÂM THANH AUDIOS -->
+<audio id="bgMusic" src="https://assets.mixkit.co/music/preview/mixkit-funny-game-loop-518.mp3" loop></audio>
+<audio id="beepSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="startSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+
 <div class="container">
-    <!-- TIÊU ĐỀ "ĐUA VỊT" NHẢY NHẢY -->
     <div class="bouncy-title">
         <span>Đ</span><span>U</span><span>A</span>
         <span>&nbsp;</span>
@@ -402,7 +399,6 @@ Phước
         </div>
     </div>
 
-    <!-- ĐƯỜNG ĐUA -->
     <div class="track-container" id="track">
         <div class="finish-line"></div>
         <div class="countdown-overlay" id="countdownOverlay">
@@ -410,7 +406,6 @@ Phước
         </div>
     </div>
 
-    <!-- BẢNG XẾP HẠNG -->
     <div class="leaderboard-section" id="leaderboardSection">
         <div class="leaderboard-header">
             🏆 🏁 BXH Đường Đua Vịt
@@ -429,7 +424,6 @@ Phước
     </div>
 </div>
 
-<!-- POPUP CHIẾN THẮNG -->
 <div class="winner-modal" id="winnerModal">
     <div class="winner-card">
         <h2>🎉 CHÚC MỪNG WINNER 🎉</h2>
@@ -445,20 +439,23 @@ Phước
     let startTime = 0;
     let finishList = [];
 
-    // Mẫu SVG Flappy Bird được tinh chỉnh độ chi tiết sắc nét
+    // Lấy phần tử âm thanh
+    const bgMusic = document.getElementById('bgMusic');
+    const beepSound = document.getElementById('beepSound');
+    const startSound = document.getElementById('startSound');
+    const winSound = document.getElementById('winSound');
+
+    // Chỉnh âm lượng nhạc nền vừa phải
+    bgMusic.volume = 0.4;
+
     const flappyBirdSVG = `
     <svg class="flappy-bird-svg" viewBox="0 0 34 24" xmlns="http://www.w3.org/2000/svg">
-        <!-- Thân chim màu vàng -->
         <path d="M7 6 h14 v2 h4 v2 h2 v2 h2 v6 h-2 v2 h-4 v2 h-14 v-2 h-2 v-2 h-2 v-8 h2 v-2 h2 v-2 Z" fill="#f8d038" stroke="#000" stroke-width="1.5"/>
-        <!-- Bụng trắng -->
         <path d="M9 16 h8 v2 h-6 v2 h-2 Z" fill="#ffffff"/>
-        <!-- Mắt to -->
         <path d="M17 2 h8 v8 h-8 Z" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
         <path d="M21 4 h2 v4 h-2 Z" fill="#000000"/>
-        <!-- Mỏ cam lớn -->
         <path d="M21 12 h11 v6 h-11 Z" fill="#f85820" stroke="#000" stroke-width="1.5"/>
         <path d="M23 15 h7 v1 h-7 Z" fill="#000000"/>
-        <!-- Cánh -->
         <path class="wing" d="M3 10 h10 v6 h-10 Z" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
     </svg>`;
 
@@ -479,10 +476,18 @@ Phước
         }, 250);
     }
 
+    function playSound(audioEl) {
+        audioEl.currentTime = 0;
+        audioEl.play().catch(e => console.log('Chờ tương tác người dùng để phát nhạc'));
+    }
+
     function resetRace() {
         if (raceInterval) clearInterval(raceInterval);
         isRacing = false;
         finishList = [];
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+
         const track = document.getElementById('track');
         track.querySelectorAll('.duck-lane').forEach(lane => lane.remove());
         document.getElementById('leaderboardSection').classList.remove('show');
@@ -521,22 +526,27 @@ Phước
 
         let count = 3;
         countdownText.innerText = count;
+        playSound(beepSound); // Tiếng Beep số 3
 
         const countTimer = setInterval(() => {
             count--;
             if (count > 0) {
                 countdownText.innerText = count;
+                playSound(beepSound); // Tiếng Beep số 2, 1
             } else if (count === 0) {
                 countdownText.innerText = "ĐUA!";
+                playSound(startSound); // Tiếng bắt đầu
             } else {
                 clearInterval(countTimer);
                 overlay.classList.remove('active');
                 
-                // Kích hoạt vỗ cánh & chuyển động lượn sóng
                 document.querySelectorAll('.duck').forEach(d => {
                     d.classList.remove('bouncing');
                     d.classList.add('flapping');
                 });
+
+                // Phát nhạc nền cuộc đua
+                playSound(bgMusic);
 
                 runRace(names);
             }
@@ -550,7 +560,7 @@ Phước
 
         const track = document.getElementById('track');
         const duckElements = track.querySelectorAll('.duck');
-        const finishPos = track.clientWidth - 110; // Điều chỉnh lùi lại chút để vừa kích thước chim to hơn
+        const finishPos = track.clientWidth - 110;
 
         let totalSeconds = parseFloat(document.getElementById('raceTimeInput').value) || 10;
         if (totalSeconds < 3) totalSeconds = 3;
@@ -578,7 +588,7 @@ Phước
                     if (duck.pos >= finishPos) {
                         duck.pos = finishPos;
                         duck.finished = true;
-                        duck.element.classList.remove('flapping'); // Dừng vỗ cánh khi tới đích
+                        duck.element.classList.remove('flapping');
 
                         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
                         finishList.push({
@@ -603,6 +613,8 @@ Phước
     }
 
     function showWinner(name) {
+        bgMusic.pause(); // Tắt nhạc nền khi có người thắng
+        playSound(winSound); // Phát tiếng chiến thắng
         document.getElementById('winnerName').innerText = name;
         document.getElementById('winnerModal').classList.add('show');
         triggerConfetti();
@@ -620,20 +632,4 @@ Phước
 
         finishList.forEach((item, index) => {
             const tr = document.createElement('tr');
-            const rankBadge = index < 3 ? medalIcons[index] : (index + 1);
-
-            tr.innerHTML = `
-                <td><span class="rank-badge">${rankBadge}</span></td>
-                <td>🐤 ${item.name}</td>
-                <td><span class="time-badge">${item.time}s</span></td>
-            `;
-
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('leaderboardSection').classList.add('show');
-    }
-</script>
-
-</body>
-</html>
+            const rankBadge = index < 3 ? medalIcons[
