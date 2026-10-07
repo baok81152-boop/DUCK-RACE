@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Đua Vịt Random 🦆</title>
-    <!-- Thư viện tạo hiệu ứng pháo hoa chúc mừng -->
+    <title>Game Đua Vịt Random 🐥</title>
+    <!-- Thư viện pháo hoa chúc mừng -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -41,7 +41,7 @@
         }
 
         .input-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
@@ -53,7 +53,7 @@
 
         textarea {
             width: 100%;
-            height: 90px;
+            height: 80px;
             padding: 12px;
             border-radius: 10px;
             border: 2px solid #cbd5e1;
@@ -67,16 +67,46 @@
             border-color: #0284c7;
         }
 
+        /* KHU VỰC ĐIỀU CHỈNH THỜI GIAN VÀ NÚT BẤM */
+        .settings-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .time-setting {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .time-setting input {
+            width: 70px;
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid #cbd5e1;
+            font-size: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
         .controls {
             display: flex;
             gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
         }
 
         button {
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 15px;
             font-weight: bold;
             color: white;
             border: none;
@@ -155,8 +185,23 @@
         }
 
         .duck-icon {
-            font-size: 28px;
+            font-size: 30px;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            display: inline-block;
+        }
+
+        /* HIỆU ỨNG NHÚN NHÚN KHI CHUẨN BỊ ĐUA */
+        .duck.bouncing .duck-icon {
+            animation: duckBounce 0.4s infinite alternate ease-in-out;
+        }
+
+        @keyframes duckBounce {
+            0% {
+                transform: translateY(0) scale(1, 1);
+            }
+            100% {
+                transform: translateY(-8px) scale(0.95, 1.05);
+            }
         }
 
         .duck-name {
@@ -177,7 +222,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 12px;
             display: flex;
             justify-content: center;
@@ -275,7 +320,7 @@
 <body>
 
 <div class="container">
-    <h1>🦆 ĐƯỜNG ĐUA VỊT RANDOM 🦆</h1>
+    <h1>🐥 ĐƯỜNG ĐUA VỊT VÀNG RANDOM 🐥</h1>
 
     <div class="input-section">
         <label for="namesInput">Nhập danh sách người tham gia (mỗi tên trên 1 dòng):</label>
@@ -287,9 +332,16 @@ Phước
 Đức</textarea>
     </div>
 
-    <div class="controls">
-        <button class="btn-start" onclick="startCountdown()">🚀 Bắt đầu đua!</button>
-        <button class="btn-reset" onclick="resetRace()">🔄 Đặt lại</button>
+    <div class="settings-bar">
+        <div class="time-setting">
+            <span>⏱️ Thời gian đua:</span>
+            <input type="number" id="raceTimeInput" value="10" min="3" max="300">
+            <span>giây</span>
+        </div>
+        <div class="controls">
+            <button class="btn-start" onclick="startCountdown()">🚀 Bắt đầu đua!</button>
+            <button class="btn-reset" onclick="resetRace()">🔄 Đặt lại</button>
+        </div>
     </div>
 
     <div class="track-container" id="track">
@@ -354,16 +406,16 @@ Phước
 
         resetRace();
 
-        // Tạo vịt trên làn đua
+        // Tạo vịt trên làn đua (Vịt vàng 🐥)
         const track = document.getElementById('track');
         names.forEach(name => {
             const lane = document.createElement('div');
             lane.className = 'duck-lane';
 
             const duck = document.createElement('div');
-            duck.className = 'duck';
+            duck.className = 'duck bouncing'; // Bật hiệu ứng nhún nhún
             duck.style.left = '10px';
-            duck.innerHTML = `<span class="duck-icon">🦆</span><span class="duck-name">${name}</span>`;
+            duck.innerHTML = `<span class="duck-icon">🐥</span><span class="duck-name">${name}</span>`;
 
             lane.appendChild(duck);
             track.appendChild(lane);
@@ -386,6 +438,10 @@ Phước
             } else {
                 clearInterval(countTimer);
                 overlay.classList.remove('active');
+                
+                // Tắt nhún nhún khi bắt đầu đua
+                document.querySelectorAll('.duck').forEach(d => d.classList.remove('bouncing'));
+                
                 runRace(names);
             }
         }, 800);
@@ -398,6 +454,15 @@ Phước
         const duckElements = track.querySelectorAll('.duck');
         const finishPos = track.clientWidth - 90;
 
+        // Lấy thời gian đua do người dùng nhập (mặc định 10s nếu để trống/nhập sai)
+        let totalSeconds = parseFloat(document.getElementById('raceTimeInput').value) || 10;
+        if (totalSeconds < 3) totalSeconds = 3;
+
+        // Tính tốc độ trung bình dựa trên thời gian đua đã chọn
+        const intervalMs = 30; // Cập nhật mỗi 30ms
+        const totalSteps = (totalSeconds * 1000) / intervalMs;
+        const baseSpeed = (finishPos - 10) / totalSteps;
+
         const ducks = Array.from(duckElements).map((el, index) => ({
             element: el,
             name: names[index],
@@ -408,8 +473,8 @@ Phước
             let winner = null;
 
             ducks.forEach(duck => {
-                // Tốc độ di chuyển ngẫu nhiên
-                const speed = Math.random() * 9 + 2;
+                // Tốc độ biến thiên ngẫu nhiên xung quanh tốc độ trung bình
+                const speed = baseSpeed * (Math.random() * 1.6 + 0.2);
                 duck.pos += speed;
                 duck.element.style.left = duck.pos + 'px';
 
@@ -423,7 +488,7 @@ Phước
                 isRacing = false;
                 showWinner(winner);
             }
-        }, 30);
+        }, intervalMs);
     }
 
     // Hiển thị kết quả người thắng
@@ -439,4 +504,5 @@ Phước
 </script>
 
 </body>
-</html>
+        </html>
+        
