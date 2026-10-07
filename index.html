@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ĐUA VỊT - GAME DUCK RACE ONLINE</title>
+    <title>ĐUA FLAPPY BIRD - GAME FLAPPY RACE ONLINE</title>
     <!-- Thư viện pháo hoa chúc mừng -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0fdf4;
+            background: #e0f2fe;
             min-height: 100vh;
             padding: 20px 10px;
             display: flex;
@@ -52,7 +52,6 @@
             text-shadow: 2px 2px 0px #d97706, 4px 4px 0px rgba(0,0,0,0.1);
         }
 
-        /* Gán độ trễ nhảy cho từng chữ cái */
         .bouncy-title span:nth-child(1) { animation-delay: 0.0s; color: #ef4444; }
         .bouncy-title span:nth-child(2) { animation-delay: 0.1s; color: #f97316; }
         .bouncy-title span:nth-child(3) { animation-delay: 0.2s; color: #eab308; }
@@ -61,6 +60,8 @@
         .bouncy-title span:nth-child(6) { animation-delay: 0.5s; color: #3b82f6; }
         .bouncy-title span:nth-child(7) { animation-delay: 0.6s; color: #8b5cf6; }
         .bouncy-title span:nth-child(8) { animation-delay: 0.7s; color: #ec4899; }
+        .bouncy-title span:nth-child(9) { animation-delay: 0.8s; color: #10b981; }
+        .bouncy-title span:nth-child(10) { animation-delay: 0.9s; color: #f59e0b; }
 
         @keyframes bounceLetter {
             0% { transform: translateY(0); }
@@ -142,8 +143,8 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        .btn-start { background-color: #10b981; }
-        .btn-start:hover { background-color: #059669; }
+        .btn-start { background-color: #f59e0b; }
+        .btn-start:hover { background-color: #d97706; }
 
         .btn-reset { background-color: #64748b; }
         .btn-reset:hover { background-color: #475569; }
@@ -151,11 +152,11 @@
         /* ĐƯỜNG ĐUA */
         .track-container {
             position: relative;
-            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            background: linear-gradient(180deg, #70c5ce 0%, #4ec0ca 100%);
             border-radius: 12px;
             padding: 10px 0;
             overflow: hidden;
-            border: 4px solid #0284c7;
+            border: 4px solid #2e8b94;
             min-height: 150px;
         }
 
@@ -177,7 +178,7 @@
 
         .duck-lane {
             position: relative;
-            height: 48px;
+            height: 52px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
@@ -191,20 +192,35 @@
             transition: left 0.1s linear;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             z-index: 2;
         }
 
-        .duck-icon {
-            font-size: 30px;
+        /* SVG FLAPPY BIRD CHUẨN PIXEL */
+        .flappy-bird-svg {
+            width: 36px;
+            height: 28px;
             display: inline-block;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
         }
 
-        .duck.bouncing .duck-icon {
-            animation: duckBounce 0.4s infinite alternate ease-in-out;
+        /* HIỆU ỨNG VỖ CÁNH FLAPPY BIRD */
+        .duck.flapping .wing {
+            animation: flapWing 0.15s infinite alternate ease-in-out;
+            transform-origin: 12px 14px;
         }
 
-        @keyframes duckBounce {
+        @keyframes flapWing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-35deg) translateY(-2px); }
+        }
+
+        /* HIỆU ỨNG NHÚN NHÚN KHI CHUẨN BỊ ĐUA */
+        .duck.bouncing .flappy-bird-svg {
+            animation: birdBounce 0.4s infinite alternate ease-in-out;
+        }
+
+        @keyframes birdBounce {
             0% { transform: translateY(0); }
             100% { transform: translateY(-8px); }
         }
@@ -251,7 +267,7 @@
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            display: none; /* Ẩn đi khi chưa đua xong */
+            display: none;
         }
 
         .leaderboard-section.show { display: block; }
@@ -290,9 +306,9 @@
             color: #334155;
         }
 
-        .leaderboard-table tr:nth-child(1) { background: #fefce8; } /* Hạng 1 Vàng */
-        .leaderboard-table tr:nth-child(2) { background: #f8fafc; } /* Hạng 2 Bạc */
-        .leaderboard-table tr:nth-child(3) { background: #fff7ed; } /* Hạng 3 Đồng */
+        .leaderboard-table tr:nth-child(1) { background: #fefce8; }
+        .leaderboard-table tr:nth-child(2) { background: #f8fafc; }
+        .leaderboard-table tr:nth-child(3) { background: #fff7ed; }
 
         .rank-badge {
             font-size: 18px;
@@ -336,9 +352,9 @@
 
         .winner-modal.show .winner-card { transform: scale(1); }
 
-        .winner-card h2 { font-size: 26px; color: #0284c7; }
+        .winner-card h2 { font-size: 26px; color: #d97706; }
         .winner-card .trophy { font-size: 60px; margin: 10px 0; }
-        .winner-card .winner-name { font-size: 32px; font-weight: bold; color: #eab308; margin-bottom: 20px; }
+        .winner-card .winner-name { font-size: 32px; font-weight: bold; color: #f59e0b; margin-bottom: 20px; }
 
         .btn-close { background-color: #22c55e; padding: 10px 25px; }
         .btn-close:hover { background-color: #16a34a; }
@@ -349,11 +365,9 @@
 <div class="container">
     <!-- TIÊU ĐỀ CHỮ NHẢY NHẢY -->
     <div class="bouncy-title">
-        <span>Đ</span><span>U</span><span>A</span>
+        <span>F</span><span>L</span><span>A</span><span>P</span><span>P</span><span>Y</span>
         <span>&nbsp;</span>
-        <span>V</span><span>Ị</span><span>T</span>
-        <span>&nbsp;</span>
-        <span>🐥</span>
+        <span>R</span><span>A</span><span>C</span><span>E</span>
     </div>
 
     <div class="input-section">
@@ -388,18 +402,17 @@ Phước
     <!-- BẢNG XẾP HẠNG -->
     <div class="leaderboard-section" id="leaderboardSection">
         <div class="leaderboard-header">
-            🏆 🏁 BXH Đường Đua Vịt
+            🏆 🏁 BXH Đường Đua Flappy Bird
         </div>
         <table class="leaderboard-table">
             <thead>
                 <tr>
                     <th style="width: 15%;">Hạng</th>
-                    <th style="width: 55%;">Tên Vịt</th>
+                    <th style="width: 55%;">Tên Bird</th>
                     <th style="width: 30%;">Thời gian</th>
                 </tr>
             </thead>
             <tbody id="leaderboardBody">
-                <!-- Nội dung bxh được chèn tự động -->
             </tbody>
         </table>
     </div>
@@ -421,7 +434,23 @@ Phước
     let startTime = 0;
     let finishList = [];
 
-    // Bắn pháo hoa
+    // Mẫu SVG Flappy Bird chuẩn Pixel Art
+    const flappyBirdSVG = `
+    <svg class="flappy-bird-svg" viewBox="0 0 34 24" xmlns="http://www.w3.org/2000/svg">
+        <!-- Thân chim (Màu vàng Flappy) -->
+        <path d="M7 6 h14 v2 h4 v2 h2 v2 h2 v6 h-2 v2 h-4 v2 h-14 v-2 h-2 v-2 h-2 v-8 h2 v-2 h2 v-2 Z" fill="#f8d038" stroke="#000" stroke-width="1.5"/>
+        <!-- Bụng trắng -->
+        <path d="M9 16 h8 v2 h-6 v2 h-2 Z" fill="#ffffff"/>
+        <!-- Mắt to -->
+        <path d="M17 2 h8 v8 h-8 Z" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
+        <path d="M21 4 h2 v4 h-2 Z" fill="#000000"/>
+        <!-- Mỏ cam lớn -->
+        <path d="M21 12 h11 v6 h-11 Z" fill="#f85820" stroke="#000" stroke-width="1.5"/>
+        <path d="M23 15 h7 v1 h-7 Z" fill="#000000"/>
+        <!-- Cánh (có vỗ cánh) -->
+        <path class="wing" d="M3 10 h10 v6 h-10 Z" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
+    </svg>`;
+
     function triggerConfetti() {
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
@@ -469,7 +498,7 @@ Phước
             const duck = document.createElement('div');
             duck.className = 'duck bouncing';
             duck.style.left = '10px';
-            duck.innerHTML = `<span class="duck-icon">🐥</span><span class="duck-name">${name}</span>`;
+            duck.innerHTML = `${flappyBirdSVG}<span class="duck-name">${name}</span>`;
 
             lane.appendChild(duck);
             track.appendChild(lane);
@@ -487,11 +516,17 @@ Phước
             if (count > 0) {
                 countdownText.innerText = count;
             } else if (count === 0) {
-                countdownText.innerText = "ĐUA!";
+                countdownText.innerText = "BAY!";
             } else {
                 clearInterval(countTimer);
                 overlay.classList.remove('active');
-                document.querySelectorAll('.duck').forEach(d => d.classList.remove('bouncing'));
+                
+                // Bật vỗ cánh và tắt nhún khi bắt đầu đua
+                document.querySelectorAll('.duck').forEach(d => {
+                    d.classList.remove('bouncing');
+                    d.classList.add('flapping');
+                });
+                
                 runRace(names);
             }
         }, 800);
@@ -532,15 +567,14 @@ Phước
                     if (duck.pos >= finishPos) {
                         duck.pos = finishPos;
                         duck.finished = true;
+                        duck.element.classList.remove('flapping'); // Ngừng vỗ cánh khi về đích
 
-                        // Tinh thoi gian can dich
                         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
                         finishList.push({
                             name: duck.name,
                             time: timeTaken
                         });
 
-                        // Neu la con vit dau tien ve dich
                         if (finishList.length === 1) {
                             showWinner(duck.name);
                         }
@@ -549,7 +583,6 @@ Phước
                 }
             });
 
-            // Khi tat ca vit da ve dich
             if (allFinished || finishList.length === ducks.length) {
                 clearInterval(raceInterval);
                 isRacing = false;
@@ -568,7 +601,6 @@ Phước
         document.getElementById('winnerModal').classList.remove('show');
     }
 
-    // VE BANG XEP HANG (BXH)
     function renderLeaderboard() {
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = '';
@@ -577,12 +609,11 @@ Phước
 
         finishList.forEach((item, index) => {
             const tr = document.createElement('tr');
-
             const rankBadge = index < 3 ? medalIcons[index] : (index + 1);
 
             tr.innerHTML = `
                 <td><span class="rank-badge">${rankBadge}</span></td>
-                <td>🐥 ${item.name}</td>
+                <td>🐤 ${item.name}</td>
                 <td><span class="time-badge">${item.time}s</span></td>
             `;
 
