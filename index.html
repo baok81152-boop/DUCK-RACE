@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ĐUA FLAPPY BIRD - GAME FLAPPY RACE ONLINE</title>
+    <title>ĐUA VỊT - GAME DUCK RACE ONLINE</title>
     <!-- Thư viện pháo hoa chúc mừng -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -32,22 +32,22 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
-        /* TIÊU ĐỀ CHỮ NHẢY NHẢY 3D */
+        /* TIÊU ĐỀ "ĐUA VỊT" CHỮ NHẢY NHẢY 3D SỐNG ĐỘNG */
         .bouncy-title {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 26px;
+            font-size: 32px;
             font-weight: 900;
             text-transform: uppercase;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 2px;
+            gap: 4px;
         }
 
         .bouncy-title span {
             display: inline-block;
-            animation: bounceLetter 1s infinite alternate ease-in-out;
+            animation: bounceLetter 0.8s infinite alternate ease-in-out;
             color: #f59e0b;
             text-shadow: 2px 2px 0px #d97706, 4px 4px 0px rgba(0,0,0,0.1);
         }
@@ -59,13 +59,10 @@
         .bouncy-title span:nth-child(5) { animation-delay: 0.4s; color: #06b6d4; }
         .bouncy-title span:nth-child(6) { animation-delay: 0.5s; color: #3b82f6; }
         .bouncy-title span:nth-child(7) { animation-delay: 0.6s; color: #8b5cf6; }
-        .bouncy-title span:nth-child(8) { animation-delay: 0.7s; color: #ec4899; }
-        .bouncy-title span:nth-child(9) { animation-delay: 0.8s; color: #10b981; }
-        .bouncy-title span:nth-child(10) { animation-delay: 0.9s; color: #f59e0b; }
 
         @keyframes bounceLetter {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-12px) scale(1.1); }
         }
 
         .input-section {
@@ -157,15 +154,15 @@
             padding: 10px 0;
             overflow: hidden;
             border: 4px solid #2e8b94;
-            min-height: 150px;
+            min-height: 180px;
         }
 
         .finish-line {
             position: absolute;
-            right: 40px;
+            right: 45px;
             top: 0;
             bottom: 0;
-            width: 18px;
+            width: 20px;
             background: repeating-linear-gradient(
                 0deg,
                 #000,
@@ -176,9 +173,10 @@
             z-index: 1;
         }
 
+        /* TĂNG KÍCH THƯỚC LÀN ĐUA ĐỂ CHỨA VỊT FLAPPY TO */
         .duck-lane {
             position: relative;
-            height: 52px;
+            height: 65px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
@@ -196,43 +194,54 @@
             z-index: 2;
         }
 
-        /* SVG FLAPPY BIRD CHUẨN PIXEL */
+        /* PHÓNG TO SVG FLAPPY BIRD */
         .flappy-bird-svg {
-            width: 36px;
-            height: 28px;
+            width: 52px;  /* Tăng từ 36px lên 52px */
+            height: 40px; /* Tăng từ 28px lên 40px */
             display: inline-block;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
         }
 
-        /* HIỆU ỨNG VỖ CÁNH FLAPPY BIRD */
+        /* HIỆU ỨNG VỖ CÁNH NHANH */
         .duck.flapping .wing {
-            animation: flapWing 0.15s infinite alternate ease-in-out;
+            animation: flapWing 0.12s infinite alternate ease-in-out;
             transform-origin: 12px 14px;
         }
 
         @keyframes flapWing {
             0% { transform: rotate(0deg); }
-            100% { transform: rotate(-35deg) translateY(-2px); }
+            100% { transform: rotate(-40deg) translateY(-3px); }
         }
 
-        /* HIỆU ỨNG NHÚN NHÚN KHI CHUẨN BỊ ĐUA */
+        /* HIỆU ỨNG DI CHUYỂN DẬP DỀNH (LƯỢN SÓNG) KHI BẮT ĐẦU ĐUA */
+        .duck.flapping .flappy-bird-svg {
+            animation: waveMotion 0.4s infinite alternate ease-in-out;
+        }
+
+        @keyframes waveMotion {
+            0% { transform: translateY(-4px) rotate(-3deg); }
+            100% { transform: translateY(4px) rotate(3deg); }
+        }
+
+        /* HIỆU ỨNG NHÚN NHÚN CHUẨN BỊ */
         .duck.bouncing .flappy-bird-svg {
-            animation: birdBounce 0.4s infinite alternate ease-in-out;
+            animation: birdBounce 0.35s infinite alternate ease-in-out;
         }
 
         @keyframes birdBounce {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-8px); }
+            100% { transform: translateY(-10px); }
         }
 
         .duck-name {
             background: rgba(255, 255, 255, 0.95);
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: #1e293b;
             white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         /* ĐẾM NGƯỢC */
@@ -363,11 +372,13 @@
 <body>
 
 <div class="container">
-    <!-- TIÊU ĐỀ CHỮ NHẢY NHẢY -->
+    <!-- TIÊU ĐỀ "ĐUA VỊT" NHẢY NHẢY -->
     <div class="bouncy-title">
-        <span>F</span><span>L</span><span>A</span><span>P</span><span>P</span><span>Y</span>
+        <span>Đ</span><span>U</span><span>A</span>
         <span>&nbsp;</span>
-        <span>R</span><span>A</span><span>C</span><span>E</span>
+        <span>V</span><span>Ị</span><span>T</span>
+        <span>&nbsp;</span>
+        <span>🐤</span>
     </div>
 
     <div class="input-section">
@@ -402,13 +413,13 @@ Phước
     <!-- BẢNG XẾP HẠNG -->
     <div class="leaderboard-section" id="leaderboardSection">
         <div class="leaderboard-header">
-            🏆 🏁 BXH Đường Đua Flappy Bird
+            🏆 🏁 BXH Đường Đua Vịt
         </div>
         <table class="leaderboard-table">
             <thead>
                 <tr>
                     <th style="width: 15%;">Hạng</th>
-                    <th style="width: 55%;">Tên Bird</th>
+                    <th style="width: 55%;">Tên Vịt</th>
                     <th style="width: 30%;">Thời gian</th>
                 </tr>
             </thead>
@@ -434,10 +445,10 @@ Phước
     let startTime = 0;
     let finishList = [];
 
-    // Mẫu SVG Flappy Bird chuẩn Pixel Art
+    // Mẫu SVG Flappy Bird được tinh chỉnh độ chi tiết sắc nét
     const flappyBirdSVG = `
     <svg class="flappy-bird-svg" viewBox="0 0 34 24" xmlns="http://www.w3.org/2000/svg">
-        <!-- Thân chim (Màu vàng Flappy) -->
+        <!-- Thân chim màu vàng -->
         <path d="M7 6 h14 v2 h4 v2 h2 v2 h2 v6 h-2 v2 h-4 v2 h-14 v-2 h-2 v-2 h-2 v-8 h2 v-2 h2 v-2 Z" fill="#f8d038" stroke="#000" stroke-width="1.5"/>
         <!-- Bụng trắng -->
         <path d="M9 16 h8 v2 h-6 v2 h-2 Z" fill="#ffffff"/>
@@ -447,7 +458,7 @@ Phước
         <!-- Mỏ cam lớn -->
         <path d="M21 12 h11 v6 h-11 Z" fill="#f85820" stroke="#000" stroke-width="1.5"/>
         <path d="M23 15 h7 v1 h-7 Z" fill="#000000"/>
-        <!-- Cánh (có vỗ cánh) -->
+        <!-- Cánh -->
         <path class="wing" d="M3 10 h10 v6 h-10 Z" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
     </svg>`;
 
@@ -516,17 +527,17 @@ Phước
             if (count > 0) {
                 countdownText.innerText = count;
             } else if (count === 0) {
-                countdownText.innerText = "BAY!";
+                countdownText.innerText = "ĐUA!";
             } else {
                 clearInterval(countTimer);
                 overlay.classList.remove('active');
                 
-                // Bật vỗ cánh và tắt nhún khi bắt đầu đua
+                // Kích hoạt vỗ cánh & chuyển động lượn sóng
                 document.querySelectorAll('.duck').forEach(d => {
                     d.classList.remove('bouncing');
                     d.classList.add('flapping');
                 });
-                
+
                 runRace(names);
             }
         }, 800);
@@ -539,7 +550,7 @@ Phước
 
         const track = document.getElementById('track');
         const duckElements = track.querySelectorAll('.duck');
-        const finishPos = track.clientWidth - 90;
+        const finishPos = track.clientWidth - 110; // Điều chỉnh lùi lại chút để vừa kích thước chim to hơn
 
         let totalSeconds = parseFloat(document.getElementById('raceTimeInput').value) || 10;
         if (totalSeconds < 3) totalSeconds = 3;
@@ -567,7 +578,7 @@ Phước
                     if (duck.pos >= finishPos) {
                         duck.pos = finishPos;
                         duck.finished = true;
-                        duck.element.classList.remove('flapping'); // Ngừng vỗ cánh khi về đích
+                        duck.element.classList.remove('flapping'); // Dừng vỗ cánh khi tới đích
 
                         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
                         finishList.push({
